@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudurKitchen — Food Business Ecosystem Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0d3d38;
+    --deep: #111111;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-muted: #8a6f2e;
+    --white: #f0ece4;
+    --muted: #888;
+    --text: #d4cfc6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 24px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 60px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 78px;
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 52px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 36px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    padding: 16px 36px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--white); }
+
+  .hero-stats {
+    margin-top: 72px;
+    display: flex;
+    gap: 48px;
+  }
+
+  .stat {
+    position: relative;
+  }
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 0;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+  .stat-num span { color: var(--gold); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* Hero right panel */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-right-inner {
+    position: absolute;
+    inset: 0;
+    background: var(--surface);
+  }
+
+  .hero-grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-brand-showcase {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 60px;
+  }
+
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    width: 100%;
+  }
+
+  .brand-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    transition: all 0.4s;
+    cursor: default;
+  }
+  .brand-card:hover {
+    background: rgba(201,168,76,0.05);
+    border-color: var(--gold-muted);
+    transform: translateY(-4px);
+  }
+  .brand-card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+  .brand-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .brand-card-type {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .hero-vertical-text {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 16px 0;
+    background: var(--deep);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .marquee-item .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION LAYOUT */
+  section {
+    padding: 120px 60px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 58px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* WHY SECTION */
+  .why-section {
+    background: var(--deep);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .why-left .section-body {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .problem-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .problem-item:hover {
+    border-color: var(--gold-muted);
+    color: var(--text);
+  }
+  .problem-item .icon { color: var(--gold); font-size: 18px; }
+
+  .why-right {
+    position: relative;
+  }
+
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .model-card::before {
+    content: '3×';
+    position: absolute;
+    top: -20px;
+    right: 30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: rgba(201,168,76,0.08);
+    pointer-events: none;
+  }
+
+  .model-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .model-sub {
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .model-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin-top: 36px;
+  }
+  .metric-box {
+    background: var(--surface);
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .metric-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    display: block;
+  }
+  .metric-lbl {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .cuisine-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .tag {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .tag:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SERVICES SECTION */
+  .services-section {
+    background: var(--black);
+    position: relative;
+  }
+
+  .services-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+  }
+
+  .services-body {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--muted);
+    padding-top: 80px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .service-item {
+    background: var(--black);
+    padding: 48px 40px;
+    transition: all 0.4s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.4s;
+  }
+  .service-item:hover::after { width: 100%; }
+  .service-item:hover { background: var(--surface); }
+
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* ABOUT SECTION */
+  .about-section {
+    background: var(--surface);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: start;
+  }
+
+  .founder-img-wrap {
+    position: relative;
+  }
+
+  .founder-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(20%);
+  }
+
+  .founder-img-border {
+    position: absolute;
+    inset: -12px -12px auto auto;
+    width: 80%;
+    height: 80%;
+    border: 1px solid var(--gold);
+    z-index: -1;
+  }
+
+  .founder-badge {
+    position: absolute;
+    bottom: 32px;
+    left: -24px;
+    background: var(--gold);
+    color: var(--black);
+    padding: 20px 28px;
+  }
+  .founder-badge-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+  .founder-badge-role {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .about-right {
+    padding-top: 60px;
+  }
+
+  .about-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.4;
+    border-left: 2px solid var(--gold);
+    padding-left: 28px;
+    margin: 40px 0;
+  }
+
+  .about-body {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .exp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold-muted);
+    padding: 10px 18px;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-top: 28px;
+  }
+
+  /* PROCESS */
+  .process-section {
+    background: var(--deep);
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin-top: 80px;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-muted), transparent);
+  }
+
+  .process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .step-num {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--gold);
+    background: var(--deep);
+    position: relative;
+    z-index: 1;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+  }
+  .process-step:hover .step-num {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .step-title {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .step-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* FINANCIALS */
+  .financials-section {
+    background: var(--black);
+  }
+
+  .financials-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-top: 60px;
+  }
+
+  .pl-table {
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .pl-header {
+    background: var(--gold);
+    color: var(--black);
+    padding: 20px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .pl-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+    transition: background 0.2s;
+  }
+  .pl-row:hover { background: rgba(255,255,255,0.02); color: var(--text); }
+  .pl-row.highlight {
+    background: rgba(201,168,76,0.08);
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .financials-insights {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .insight-card {
+    border: 1px solid var(--border);
+    padding: 32px;
+    transition: all 0.3s;
+  }
+  .insight-card:hover { border-color: var(--gold-muted); }
+
+  .insight-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .insight-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .insight-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
+  /* FRANCHISE */
+  .franchise-section {
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .franchise-bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: rgba(201,168,76,0.03);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .franchise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--border);
+    margin-top: 60px;
+  }
+
+  .franchise-card {
+    background: var(--surface);
+    padding: 56px 48px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+  .franchise-card:hover { background: var(--deep); }
+
+  .franchise-model {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .franchise-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .franchise-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+    margin: 32px 0;
+  }
+  .franchise-price sub {
+    font-size: 18px;
+    vertical-align: super;
+  }
+  .franchise-price sup {
+    font-size: 18px;
+    color: var(--muted);
+  }
+
+  .franchise-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .franchise-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .franchise-features li::before {
+    content: '—';
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* BRANDS */
+  .brands-section {
+    background: var(--deep);
+  }
+
+  .brands-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 60px;
+  }
+
+  .brand-item {
+    background: var(--deep);
+    padding: 48px 32px;
+    text-align: center;
+    transition: all 0.4s;
+    cursor: default;
+  }
+  .brand-item:hover {
+    background: var(--surface);
+    transform: translateY(-4px);
+  }
+
+  .brand-emoji { font-size: 36px; margin-bottom: 20px; }
+  .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .brand-cuisine {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--black);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    margin-top: 60px;
+  }
+
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .contact-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .contact-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .contact-val:hover { color: var(--gold); }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .form-input, .form-select, .form-textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+  }
+  .form-select option { background: var(--surface); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #25d366;
+    color: #fff;
+    padding: 16px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.3s;
+    margin-top: 8px;
+  }
+  .whatsapp-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    padding: 60px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .footer-brand-name span { color: var(--gold); }
+
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .footer-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .footer-legal {
+    font-size: 11px;
+    color: rgba(136,136,136,0.6);
+    line-height: 1.6;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-nav-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .footer-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-nav-links a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* STICKY CTA */
+  .sticky-cta {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--gold);
+    color: var(--black);
+    padding: 14px 24px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    z-index: 50;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+  }
+  .sticky-cta:hover {
+    background: var(--gold-light);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+    transform: translateY(-2px);
+  }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 1024px) {
+    nav { padding: 20px 30px; }
+    .nav-links { display: none; }
+    section { padding: 80px 30px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-title { font-size: 52px; }
+    .hero-left { padding: 120px 30px 60px; }
+    .hero-stats { gap: 32px; }
+    .why-grid, .about-grid, .services-header,
+    .financials-grid, .franchise-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .brands-grid { grid-template-columns: 1fr 1fr; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .process-steps::before { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    footer { padding: 40px 30px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- STICKY CTA -->
+<a href="#contact" class="sticky-cta">Book Free Call</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Cloud<span>ur</span>Kitchen</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#franchise">Franchise</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+
+  </ul>
+  <a href="#contact" class="nav-cta">Start Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding: 0;">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Food Business Ecosystem Builder</div>
+    <h1 class="hero-title">
+      Build, Scale &<br>
+      <em>Dominate</em><br>
+      the Food Business
+    </h1>
+    <p class="hero-sub">End-to-end cloud kitchen & culinary consultancy helping restaurateurs, investors, and brands launch, scale, and franchise high-performing food concepts — without the guesswork.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Start Your Food Business</a>
+      <a href="#about" class="btn-ghost">Book Consultation</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">12<span>+</span></div>
+        <div class="stat-label">Brands Developed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3<span>×</span></div>
+        <div class="stat-label">Revenue Model</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5<span>yr</span></div>
+        <div class="stat-label">F&B Experience</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <div class="hero-grid-pattern"></div>
+      <div class="hero-brand-showcase">
+        <div class="brand-grid">
+          <div class="brand-card">
+            <div class="brand-card-icon">🍗</div>
+            <div class="brand-card-name">Crixpenn</div>
+            <div class="brand-card-type">Fried Chicken</div>
+          </div>
+          <div class="brand-card">
+            <div class="brand-card-icon">🍚</div>
+            <div class="brand-card-name">Sehbazz</div>
+            <div class="brand-card-type">Mughlai Biryani</div>
+          </div>
+          <div class="brand-card">
+            <div class="brand-card-icon">🍟</div>
+            <div class="brand-card-name">Peppi</div>
+            <div class="brand-card-type">Fries & Drinks</div>
+          </div>
+          <div class="brand-card">
+            <div class="brand-card-icon">🌯</div>
+            <div class="brand-card-name">WrapTrack</div>
+            <div class="brand-card-type">Wraps & Rolls</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-vertical-text">Abiding Ventures · Punjab, India</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="dot"></span> Cloud Kitchen Setup</span>
+    <span class="marquee-item"><span class="dot"></span> Culinary Consultancy</span>
+    <span class="marquee-item"><span class="dot"></span> Food Concept Development</span>
+    <span class="marquee-item"><span class="dot"></span> Menu Engineering</span>
+    <span class="marquee-item"><span class="dot"></span> SOP & Recipe Systems</span>
+    <span class="marquee-item"><span class="dot"></span> Franchise Solutions</span>
+    <span class="marquee-item"><span class="dot"></span> 12+ Brands Built</span>
+    <span class="marquee-item"><span class="dot"></span> Cloud Kitchen Setup</span>
+    <span class="marquee-item"><span class="dot"></span> Culinary Consultancy</span>
+    <span class="marquee-item"><span class="dot"></span> Food Concept Development</span>
+    <span class="marquee-item"><span class="dot"></span> Menu Engineering</span>
+    <span class="marquee-item"><span class="dot"></span> SOP & Recipe Systems</span>
+    <span class="marquee-item"><span class="dot"></span> Franchise Solutions</span>
+    <span class="marquee-item"><span class="dot"></span> 12+ Brands Built</span>
+  </div>
+</div>
+
+<!-- WHY SECTION -->
+<section class="why-section fade-in" id="why">
+  <div class="why-grid">
+    <div class="why-left">
+      <div class="section-label">The Problem</div>
+      <h2 class="section-title">60% of Restaurants<br><em>Fail in 3 Years</em></h2>
+      <p class="section-body">The modern food consumer demands speed, convenience, and consistency. Yet most food businesses collapse under the weight of operational chaos. We fix that — systematically.</p>
+      <ul class="problem-list">
+        <li class="problem-item"><span class="icon">⚡</span> Inefficient delivery operations</li>
+        <li class="problem-item"><span class="icon">💸</span> Fixed expenses eating profitability</li>
+        <li class="problem-item"><span class="icon">⚙️</span> Difficulties in managing operations</li>
+        <li class="problem-item"><span class="icon">🎯</span> Inconsistency in taste & quality</li>
+        <li class="problem-item"><span class="icon">📊</span> Lack of financial management</li>
+      </ul>
+    </div>
+    <div class="why-right">
+      <div class="model-card">
+        <div class="model-title">Multiple Brands.<br>One Kitchen.</div>
+        <div class="model-sub">The 3× Revenue Model</div>
+        <p class="section-body" style="font-size:14px; color: var(--muted);">Run 3–6 distinct food brands out of a single kitchen. Multiply your revenue without multiplying your costs. Asset optimization through delivery-first strategy.</p>
+        <div class="model-metrics">
+          <div class="metric-box"><span class="metric-val">3×</span><div class="metric-lbl">Sales</div></div>
+          <div class="metric-box"><span class="metric-val">3×</span><div class="metric-lbl">Profit</div></div>
+          <div class="metric-box"><span class="metric-val">6</span><div class="metric-lbl">Brands/Kitchen</div></div>
+        </div>
+        <div class="cuisine-tags">
+          <span class="tag">Biryani</span>
+          <span class="tag">Burgers</span>
+          <span class="tag">Desserts</span>
+          <span class="tag">Smoothies</span>
+          <span class="tag">Fried Chicken</span>
+          <span class="tag">Asian</span>
+          <span class="tag">North Indian</span>
+          <span class="tag">+ More</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section fade-in" id="services">
+  <div class="services-header">
+    <div>
+      <div class="section-label">What We Do</div>
+      <h2 class="section-title">End-to-End<br><em>Ecosystem</em><br>Support</h2>
+    </div>
+    <div class="services-body">Not just a consultant. Not just a kitchen setup agency. We are a full-spectrum food business ecosystem builder — from concept ideation to franchise scaling, with everything in between handled by proven systems.</div>
+  </div>
+  <div class="services-grid">
+    <div class="service-item">
+      <div class="service-num">01</div>
+      <div class="service-name">Concept & Brand Development</div>
+      <div class="service-desc">Business idea creation, USP positioning, market analysis, cuisine selection, and competitor benchmarking. We build brands that win.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">02</div>
+      <div class="service-name">Menu Engineering</div>
+      <div class="service-desc">Demand-based menus with optimized pricing strategy, profit margin analysis, seasonal planning, and upsell architecture.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">03</div>
+      <div class="service-name">Recipe & SOP Development</div>
+      <div class="service-desc">Full recipe documentation, standardization systems, yield & costing calculations, and production workflows for consistency at scale.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">04</div>
+      <div class="service-name">Kitchen Operations Setup</div>
+      <div class="service-desc">AutoCAD layout planning, equipment selection, hygiene protocols, licensing support, and complete operational workflow design.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">05</div>
+      <div class="service-name">Supply Chain Management</div>
+      <div class="service-desc">Vendor sourcing strategy, ingredient supplier lists, packaging suppliers, cost negotiation guidance, and inventory planning.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">06</div>
+      <div class="service-name">Profitability Systems</div>
+      <div class="service-desc">Food costing spreadsheets, cost per portion analysis, break-even models, margin optimization, and aggregator integration.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">07</div>
+      <div class="service-name">Culinary Consultancy</div>
+      <div class="service-desc">Concept-based restaurants, theme-driven dining, food storytelling, and specialized formats like QSR innovation systems.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">08</div>
+      <div class="service-name">QSR & Specialized Formats</div>
+      <div class="service-desc">Food carts, mobile food trucks, gym smoothie bars, clinical nutrition kitchens, themed restaurants, and hybrid dine-in + cloud systems.</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">09</div>
+      <div class="service-name">Franchise Systems</div>
+      <div class="service-desc">Complete franchise kit development, FOFO & BOT model implementation, operational manuals, and partner support systems.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section fade-in" id="about">
+  <div class="about-grid">
+    <div class="founder-img-wrap">
+      <img src="G:\Abiding venture\sukhman.png" alt="Sukhmanpreet Singh" class="founder-img">
+      <div class="founder-img-border"></div>
+      <div class="founder-badge">
+        <div class="founder-badge-name">Sukhmanpreet Singh</div>
+        <div class="founder-badge-role">Founder & CEO · Abiding Ventures</div>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="section-label">The Founder</div>
+      <h2 class="section-title">Built by Someone<br>Who Knows the<br><em>Kitchen</em></h2>
+      <div class="about-quote">"The future of food is internet-first, data-driven, and ruthlessly efficient."</div>
+      <p class="about-body">Sukhmanpreet Singh, with over five years of experience in the F&B consulting and franchising sector, launched CloudurKitchen under Abiding Ventures in Punjab with a singular vision — to build internet-first food brands that operate efficiently under one roof.</p>
+      <p class="about-body">Recognizing that 60% of restaurants fail within three years, he built a systematic, data-driven approach to food entrepreneurship. Our team of chefs and brand managers craft menus based on demographic insights, keyword demand, pricing strategies, and evolving food trends.</p>
+      <div class="exp-badge">⚡ 5+ Years F&B Consulting & Franchising Experience</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section fade-in" id="process">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Launch in <em>30–60 Days</em></h2>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Consultation</div>
+      <div class="step-desc">Free strategy call to understand your goals and budget</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Concept Creation</div>
+      <div class="step-desc">Brand identity, cuisine selection, USP development</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Menu & SOP</div>
+      <div class="step-desc">Recipe engineering, costing, and standardized systems</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Kitchen Setup</div>
+      <div class="step-desc">Layout, equipment, licensing, and vendor onboarding</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">05</div>
+      <div class="step-title">Launch</div>
+      <div class="step-desc">Aggregator listings, trials, marketing, and POS setup</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">06</div>
+      <div class="step-title">Scale</div>
+      <div class="step-desc">Add brands, expand cities, build your franchise</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIALS -->
+<section class="financials-section fade-in" id="financials">
+  <div class="section-label">Proven Returns</div>
+  <h2 class="section-title">The Numbers<br><em>Don't Lie</em></h2>
+  <p style="color: var(--muted); font-size: 14px; max-width: 600px; margin-top: 16px; line-height: 1.8;">Real P&L from a client in Patiala managing 6 brands from a single kitchen. Figures are projected within 5 months of launch.</p>
+  <div class="financials-grid">
+    <div class="pl-table">
+      <div class="pl-header">
+        <span>Item</span><span>Month 2–6</span><span>Month 7+</span>
+      </div>
+      <div class="pl-row"><span>Daily Sale Projected</span><span>₹10,000</span><span>₹18,000</span></div>
+      <div class="pl-row"><span>Monthly Net Sale</span><span>₹3,00,000</span><span>₹5,40,000</span></div>
+      <div class="pl-row"><span>Delivery Commission (25%)</span><span>₹75,000</span><span>₹1,35,000</span></div>
+      <div class="pl-row"><span>COGS & Packaging (32%)</span><span>₹96,000</span><span>₹1,72,800</span></div>
+      <div class="pl-row"><span>Rent</span><span>₹15,000</span><span>₹15,000</span></div>
+      <div class="pl-row"><span>Salary</span><span>₹40,000</span><span>₹60,000</span></div>
+      <div class="pl-row"><span>Electricity</span><span>₹5,000</span><span>₹10,000</span></div>
+      <div class="pl-row"><span>Marketing</span><span>₹5,000</span><span>₹5,000</span></div>
+      <div class="pl-row"><span>Royalty @ 6%</span><span>₹18,000</span><span>₹32,400</span></div>
+      <div class="pl-row"><span>Total Expenses</span><span>₹2,59,000</span><span>₹4,38,200</span></div>
+      <div class="pl-row highlight"><span>NET PROFIT</span><span>₹41,000</span><span>₹1,01,800</span></div>
+    </div>
+    <div class="financials-insights">
+      <div class="insight-card">
+        <div class="insight-val">6–8</div>
+        <div class="insight-label">Months to Profitability</div>
+        <div class="insight-body">Achieve break-even within 6–8 months of launch with our proven system. In rare cases, up to 12 months.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-val">15–18%</div>
+        <div class="insight-label">Annual Sales Growth</div>
+        <div class="insight-body">Sales grow 15–18% annually while fixed costs increase only 2–3%. The compounding advantage of the cloud kitchen model.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-val">₹32,900 Cr</div>
+        <div class="insight-label">Market Size by 2030</div>
+        <div class="insight-body">India's online food delivery industry projected to reach ₹32,900 crore by 2030. The opportunity is massive — and now.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section class="brands-section fade-in" id="brands">
+  <div class="section-label">Brand Portfolio</div>
+  <h2 class="section-title">12<em>+</em> Brands Built<br>& Counting</h2>
+  <div class="brands-grid">
+    <div class="brand-item">
+      <div class="brand-emoji">🍗</div>
+      <div class="brand-name">Crixpenn Fried Chicken</div>
+      <div class="brand-cuisine">American Fried Chicken</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🍚</div>
+      <div class="brand-name">Sehbazz Biryani</div>
+      <div class="brand-cuisine">Mughlai · Royal Dum Zaika</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🍟</div>
+      <div class="brand-name">Peppi</div>
+      <div class="brand-cuisine">Fries & Drinks</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🌯</div>
+      <div class="brand-name">WrapTrack</div>
+      <div class="brand-cuisine">Wraps · Track of Flavours</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🍔</div>
+      <div class="brand-name">The Burger Studio</div>
+      <div class="brand-cuisine">Mexican Burgers</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🫓</div>
+      <div class="brand-name">Radiant Sizzle</div>
+      <div class="brand-cuisine">Fresh From Our Fields</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">🏠</div>
+      <div class="brand-name">BAllI da Dhaba</div>
+      <div class="brand-cuisine">North Indian · Punjabi</div>
+    </div>
+    <div class="brand-item">
+      <div class="brand-emoji">✨</div>
+      <div class="brand-name">& 12+ More</div>
+      <div class="brand-cuisine">In Development</div>
+    </div>
+  </div>
+</section>
+
+<!-- FRANCHISE -->
+<section class="franchise-section fade-in" id="franchise">
+  <div class="franchise-bg-text">FRANCHISE</div>
+  <div class="section-label">Investment Opportunity</div>
+  <h2 class="section-title">Own a Proven<br><em>Food Business</em></h2>
+  <p style="color: var(--muted); font-size: 14px; max-width: 600px; margin: 20px 0 0; line-height: 1.8;">We've dedicated thousands of hours researching and perfecting the delivery-first business model. Now we're making it available to partners across India.</p>
+  <div class="franchise-grid">
+    <div class="franchise-card">
+      <div class="franchise-model">FOFO Model</div>
+      <div class="franchise-title">Franchise Owned<br>Franchise Operated</div>
+      <p style="font-size:13px; color: var(--muted); line-height: 1.7;">You own it, you run it — with our complete system, SOPs, brand, and ongoing support. Full autonomy with the safety net of a proven framework.</p>
+      <div class="franchise-price"><sub>₹</sub>3,99,999<sup>/Brand*</sup></div>
+      <ul class="franchise-features">
+        <li>Complete brand license & identity</li>
+        <li>Menu, recipes & SOP documentation</li>
+        <li>Kitchen setup & equipment guidance</li>
+        <li>Aggregator listing & onboarding</li>
+        <li>Marketing & social media assets</li>
+        <li>Ongoing operational support</li>
+      </ul>
+    </div>
+    <div class="franchise-card">
+      <div class="franchise-model">BOT Model</div>
+      <div class="franchise-title">Build Operate<br>Transfer</div>
+      <p style="font-size:13px; color: var(--muted); line-height: 1.7;">We build the kitchen, operate it to profitability, then transfer it to you — fully functional, fully profitable, ready to scale.</p>
+      <div class="franchise-price" style="color: var(--muted);">Custom<sup> Pricing</sup></div>
+      <ul class="franchise-features">
+        <li>Full kitchen build & setup</li>
+        <li>Operations management until handover</li>
+        <li>Profitability guaranteed before transfer</li>
+        <li>Complete documentation & training</li>
+        <li>Team hiring & training support</li>
+        <li>Post-transfer consulting</li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top: 48px; padding: 32px; border: 1px solid var(--border); background: rgba(201,168,76,0.04);">
+    <p style="font-size: 13px; color: var(--muted); line-height: 1.8;">We also serve: <strong style="color: var(--gold);">Gym & Smoothie Bars</strong> (healthy meals, goal-dedicated smoothies) · <strong style="color: var(--gold);">Physio & Clinic Bars</strong> (nutrition meals, packed meals for specially abled) · <strong style="color: var(--gold);">Cafeterias & Institutions</strong> · <strong style="color: var(--gold);">Themed Restaurants</strong> (Charcoal Cuisine, Desi, Mexican, etc.)</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section fade-in" id="contact">
+  <div class="section-label">Get Started</div>
+  <h2 class="section-title">Let's Build Your<br><em>Food Empire</em></h2>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-item">
+        <div class="contact-label">Phone / WhatsApp</div>
+        <a href="tel:+916239913625" class="contact-val">+91 62399-13625</a>
+      </div>
+      <div class="contact-item">
+        <div class="contact-label">Email</div>
+        <a href="mailto:abiding@cloudurkitchen.com" class="contact-val">abiding@cloudurkitchen.com</a>
+      </div>
+      <div class="contact-item">
+        <div class="contact-label">Company</div>
+        <div class="contact-val" style="color: var(--muted);">Abiding Ventures · Punjab, India</div>
+      </div>
+      <a href="https://wa.me/916239913625?text=Hi%2C%20I%27m%20interested%20in%20CloudurKitchen%20services" target="_blank" class="whatsapp-btn">
+        💬 Chat on WhatsApp
+      </a>
+    </div>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input type="text" class="form-input" placeholder="Your city">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Budget</label>
+          <select class="form-select">
+            <option value="">Select budget range</option>
+            <option>Under ₹5 Lakhs</option>
+            <option>₹5–10 Lakhs</option>
+            <option>₹10–25 Lakhs</option>
+            <option>₹25+ Lakhs</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Type</label>
+          <select class="form-select">
+            <option value="">Select type</option>
+            <option>New Cloud Kitchen</option>
+            <option>Existing Restaurant</option>
+            <option>Franchise Partner</option>
+            <option>Investment Inquiry</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Goals</label>
+        <textarea class="form-textarea" placeholder="Tell us about your food business goals..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="alert('Thank you! We will contact you within 24 hours.')">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Cloud<span>ur</span>Kitchen</div>
+      <div class="footer-tagline">Culinary Consultants · Abiding Ventures</div>
+      <p class="footer-body">Not just a consultant. Not just a kitchen setup agency. We are a Food Business Ecosystem Builder — helping restaurateurs, investors, and entrepreneurs build, scale, and dominate the food industry.</p>
+      <p class="footer-legal">All logos and brands are intellectual property of Abiding Ventures. Misuse or unauthorized usage will lead to legal actions and seizure. T&C apply. © 2024–2026 CloudurKitchen / Abiding Ventures. All rights reserved.</p>
+    </div>
+    <div>
+      <div class="footer-nav-title">Services</div>
+      <ul class="footer-nav-links">
+        <li><a href="#services"><a href="tel:+916239913625" class="contact-val">+91 62399-13625</a></a></li>
+        <li><a href="#services">Menu Engineering</a></li>
+        <li><a href="#services">Kitchen Setup</a></li>
+        <li><a href="#services">SOP Development</a></li>
+        <li><a href="#services">Supply Chain</a></li>
+        <li><a href="#services">Franchise Systems</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-nav-title">Company</div>
+      <ul class="footer-nav-links">
+        <li><a href="#about">About Founder</a></li>
+        <li><a href="#brands">Brand Portfolio</a></li>
+        <li><a href="#financials">Case Studies</a></li>
+        <li><a href="#franchise">Franchise</a></li>
+        <li><a href="#process">Our Process</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-nav-title">Contact</div>
+      <ul class="footer-nav-links">
+        <li><a href="tel:+916239913625">+91 62399-13625</a></li>
+        <li><a href="mailto:abiding@cloudurkitchen.com">abiding@cloudurkitchen.com</a></li>
+        <li><a href="https://wa.me/916239913625" target="_blank">WhatsApp Direct</a></li>
+        <li><a href="www.linkedin.com/in/sukhmanpreet-singh-370511394" target="_blank">Linkedin</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 CloudurKitchen · Abiding Ventures · Punjab, India</span>
+    <span>Cloud Kitchen Setup · Culinary Consultancy · Food Brand Incubation</span>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 4 + 'px';
+    cursor.style.top = my - 4 + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      ring.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+    });
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) {
+      nav.style.background = 'rgba(10,10,10,0.97)';
+    } else {
+      nav.style.background = 'linear-gradient(to bottom, rgba(10,10,10,0.95), transparent)';
+    }
+  });
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
